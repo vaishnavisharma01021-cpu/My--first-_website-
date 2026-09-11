@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Zone</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f5ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-box {
+      background: white;
+      width: 90%;
+      max-width: 600px;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    #question {
+      font-size: 20px;
+      margin: 25px 0;
+      font-weight: bold;
+    }
+
+    .option {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: #e8ecff;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .option:hover {
+      background: #d2d9ff;
+    }
+
+    #nextBtn, #restartBtn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #nextBtn:hover, #restartBtn:hover {
+      background: #3730a3;
+    }
+
+    #result {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="quiz-box">
+    <h1>Quiz Zone</h1>
+
+    <div id="quiz">
+      <div id="question"></div>
+
+      <div id="options"></div>
+
+      <button id="nextBtn" onclick="nextQuestion()">Next Question</button>
+    </div>
+
+    <div id="result"></div>
+    <button id="restartBtn" onclick="restartQuiz()" style="display:none;">
+      Restart Quiz
+    </button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "What does HTML stand for?",
+        options: [
+          "Hyper Text Markup Language",
+          "High Tech Modern Language",
+          "Hyperlink Text Management Language",
+          "Home Tool Markup Language"
+        ],
+        answer: 0
+      },
+
+      {
+        question: "Which language is used to style a website?",
+        options: [
+          "HTML",
+          "CSS",
+          "C",
+          "Python"
+        ],
+        answer: 1
+      },
+
+      {
+        question: "Which language makes a website interactive?",
+        options: [
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "SQL"
+        ],
+        answer: 2
+      },
+
+      {
+        question: "Which tag is used to create a paragraph in HTML?",
+        options: [
+          "<h1>",
+          "<p>",
+          "<img>",
+          "<br>"
+        ],
+        answer: 1
+      },
+
+      {
+        question: "Which symbol is used for comments in JavaScript?",
+        options: [
+          "//",
+          "##",
+          "<!-- -->",
+          "**"
+        ],
+        answer: 0
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selected = false;
+
+    function loadQuestion() {
+      selected = false;
+
+      const q = questions[currentQuestion];
+
+      document.getElementById("question").innerText =
+        (currentQuestion + 1) + ". " + q.question;
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+
+        button.innerText = option;
+        button.className = "option";
+
+        button.onclick = function() {
+          if (selected) return;
+
+          selected = true;
+
+          if (index === q.answer) {
+            score++;
+            button.style.background = "lightgreen";
+          } else {
+            button.style.background = "salmon";
+          }
+        };
+
+        optionsDiv.appendChild(button);
+      });
+    }
+
+    function nextQuestion() {
+      if (!selected) {
+        alert("Please select an answer!");
+        return;
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz").style.display = "none";
+
+        document.getElementById("result").innerHTML =
+          "🎉 Quiz Completed!<br><br>Your Score: " +
+          score + " / " + questions.length;
+
+        document.getElementById("restartBtn").style.display = "block";
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+
+      document.getElementById("quiz").style.display = "block";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("restartBtn").style.display = "none";
+
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
